@@ -11,9 +11,12 @@ enum PopupAlign {
 ///
 /// This function returns an [OverlayEntry] object, on which we can call
 /// the remove function to dynamically remove the popup.
+///
+/// You can also use, [OverlayEntry] provided in [builder] parameter to call
+/// the remove function.
 OverlayEntry showPopup({
   required BuildContext context,
-  required Popup popup,
+  required Popup Function(OverlayEntry overlayEntry) builder,
   bool barrierDismissible = true,
   bool showBarrierColor = false,
   Color barrierColor = Colors.black38,
@@ -31,7 +34,7 @@ OverlayEntry showPopup({
                   ),
                 ),
               ),
-              popup,
+              builder(overlayEntry),
             ],
           ));
   Overlay.of(context)!.insert(overlayEntry);
