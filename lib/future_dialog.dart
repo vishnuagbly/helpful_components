@@ -1,20 +1,26 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+
 import 'common_alert_dialog.dart';
 import 'loading_dialog.dart';
 
 class FutureDialog<T> extends StatelessWidget {
+  String get _name => 'FutureDialog<$T>';
+
   const FutureDialog({
     required this.future,
     this.loadingText = 'Loading',
     this.hasData,
     this.hasError,
+    this.debug = false,
+    this.throwError = false,
     Key? key,
   }) : super(key: key);
 
   final Future<T> future;
   final String loadingText;
+  final bool debug, throwError;
   final Widget Function(Object? error)? hasError;
 
   ///executes when either future is done with no error or returns data.
@@ -38,6 +44,7 @@ class FutureDialog<T> extends StatelessWidget {
           if (hasData != null) {
             return hasData!(snapshot.data);
           } else {
+            if (debug) log('data: ${snapshot.data}', name: _name);
             return const CommonAlertDialog('DONE');
           }
         }
@@ -45,6 +52,8 @@ class FutureDialog<T> extends StatelessWidget {
           if (hasError != null) {
             return hasError!(snapshot.error);
           } else {
+            if (debug) log('error: ${snapshot.error}', name: _name);
+            if (throwError) throw snapshot.error!;
             String? errorMessage = 'SOME ERROR OCCURRED';
             if (snapshot.error is String) {
               errorMessage = snapshot.error as String?;
