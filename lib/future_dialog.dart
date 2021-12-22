@@ -11,8 +11,9 @@ class FutureDialog<T> extends StatelessWidget {
   const FutureDialog({
     required this.future,
     this.loadingText = 'Loading',
-    this.hasData,
-    this.hasError,
+    this.onData,
+    this.onError,
+    this.onLoading,
     this.debug = false,
     this.throwError = false,
     Key? key,
@@ -21,7 +22,8 @@ class FutureDialog<T> extends StatelessWidget {
   final Future<T> future;
   final String loadingText;
   final bool debug, throwError;
-  final Widget Function(Object? error)? hasError;
+  final Widget Function(Object? error)? onError;
+  final Widget Function()? onLoading;
 
   ///executes when either future is done with no error or returns data.
   ///
@@ -31,7 +33,7 @@ class FutureDialog<T> extends StatelessWidget {
   ///     return CommonAlertDialog('Done');
   ///   }
   ///```
-  final Widget Function(T? res)? hasData;
+  final Widget Function(T? res)? onData;
 
   @override
   Widget build(BuildContext context) {
@@ -41,16 +43,16 @@ class FutureDialog<T> extends StatelessWidget {
         if (snapshot.hasData ||
             (snapshot.connectionState == ConnectionState.done &&
                 !snapshot.hasError)) {
-          if (hasData != null) {
-            return hasData!(snapshot.data);
+          if (onData != null) {
+            return onData!(snapshot.data);
           } else {
             if (debug) log('data: ${snapshot.data}', name: _name);
             return const CommonAlertDialog('DONE');
           }
         }
         if (snapshot.hasError) {
-          if (hasError != null) {
-            return hasError!(snapshot.error);
+          if (onError != null) {
+            return onError!(snapshot.error);
           } else {
             if (debug) log('error: ${snapshot.error}', name: _name);
             if (throwError) throw snapshot.error!;
@@ -69,7 +71,7 @@ class FutureDialog<T> extends StatelessWidget {
             );
           }
         }
-        return LoadingDialog(loadingText);
+        return (onLoading ?? () => LoadingDialog(loadingText))();
       },
     );
   }

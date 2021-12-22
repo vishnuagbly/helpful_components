@@ -10,28 +10,35 @@ class CommonAsyncSnapshotResponses<T> extends StatelessWidget {
   const CommonAsyncSnapshotResponses(
     this.snapshot, {
     Key? key,
-    this.builder,
+    this.onData,
     this.debug = false,
     this.throwError = false,
-    this.onLoading = const Center(child: CircularProgressIndicator()),
+    this.onLoading,
+    this.onError,
   }) : super(key: key);
 
   final AsyncSnapshot<T> snapshot;
-  final Widget Function(T data)? builder;
-  final Widget onLoading;
+  final Widget Function(T data)? onData;
   final bool debug, throwError;
+  final Widget Function(Object? error)? onError;
+  final Widget Function()? onLoading;
 
   @override
   Widget build(BuildContext context) {
-    if (snapshot.connectionState == ConnectionState.waiting) return onLoading;
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return (onLoading ??
+          () => const Center(child: CircularProgressIndicator()))();
+    }
     if (snapshot.hasError) {
       if (debug) log('error: ${snapshot.error}', name: _name);
       if (throwError) throw snapshot.error!;
-      return const Center(child: Text("Some Error occurred"));
+      return (onError ??
+          (_) =>
+              const Center(child: Text("Some Error occurred")))(snapshot.error);
     }
     if (!snapshot.hasData) {
       return const Center(child: Text("No Data Available"));
     }
-    return builder == null ? Container() : builder!(snapshot.data!);
+    return onData == null ? Container() : onData!(snapshot.data!);
   }
 }
