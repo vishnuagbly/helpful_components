@@ -1,3 +1,7 @@
+## 0.2.0
+BREAKING CHANGE:
+Made key parameter an optional named parameter in RowInfo Widget.
+
 ## 0.1.0
 BREAKING CHANGES:
 

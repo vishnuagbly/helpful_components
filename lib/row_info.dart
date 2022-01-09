@@ -6,7 +6,6 @@ class RowInfo extends StatelessWidget {
   ///Shows two widgets in a row. Useful when wants to show a row of bill, i.e
   ///when we want to show a value for a certain heading/title.
   const RowInfo(
-    Key? key,
     this.firstText,
     this.secondText, {
     this.firstStyle,
@@ -14,6 +13,7 @@ class RowInfo extends StatelessWidget {
     this.firstColor,
     this.secondColor,
     double? size,
+    Key? key,
   })  : firstWidget = null,
         secondWidget = null,
         firstSize = size,
