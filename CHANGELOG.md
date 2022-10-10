@@ -1,3 +1,9 @@
+## 0.2.2
+
+Added 2 New parameters in LazyBuilder, constraints and preventRedundantRebuilds.
+
+Also fixed a Bug: LazyBuilder not re-generating the RenderBox on rebuild.
+
 ## 0.2.1
 
 Added 2 New Components, LazyBuilder and PositionedAlign.
