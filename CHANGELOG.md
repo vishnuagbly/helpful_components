@@ -1,3 +1,11 @@
+## 0.3.0
+
+[Breaking Change]: Updated files architecture, to put each component inside "src" folder.
+
+Added HelpfulComponentsTheme and HelpfulComponentsThemeData. Added CommonAlertDialogThemeData.
+
+Added Parameters to the CommonAlertDialog: shape, elevation, textStyle, and showOkButton.
+
 ## 0.2.2
 
 Added 2 New parameters in LazyBuilder, constraints and preventRedundantRebuilds.
