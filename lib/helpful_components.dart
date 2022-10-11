@@ -1,12 +1,12 @@
 library helpful_components;
 
-export 'boolean_dialog.dart';
-export 'common_alert_dialog.dart';
-export 'common_snapshot_responses.dart';
-export 'custom_pop_up_menu.dart';
-export 'future_dialog.dart';
-export 'lazy_builder.dart';
-export 'loading_dialog.dart';
-export 'loading_screen.dart';
-export 'positioned_align.dart';
-export 'row_info.dart';
+export 'src/boolean_dialog.dart';
+export 'src/common_alert_dialog.dart';
+export 'src/common_snapshot_responses.dart';
+export 'src/custom_pop_up_menu.dart';
+export 'src/future_dialog.dart';
+export 'src/lazy_builder.dart';
+export 'src/loading_dialog.dart';
+export 'src/loading_screen.dart';
+export 'src/positioned_align.dart';
+export 'src/row_info.dart';
