@@ -1,3 +1,8 @@
+## 0.3.1
+
+Added new 'box' parameter in 'PositionedAlign', allowing 'synchronous' or 'NOT lazy' drawing of the
+widget.
+
 ## 0.3.0
 
 [Breaking Change]: Updated files architecture, to put each component inside "src" folder.

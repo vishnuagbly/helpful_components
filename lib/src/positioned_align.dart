@@ -32,6 +32,7 @@ class PositionedAlign extends StatefulWidget {
     this.alignment = Alignment.topLeft,
     this.forceTry,
     this.onError,
+    this.box,
     required this.child,
     Key? key,
   }) : super(key: key);
@@ -62,6 +63,12 @@ class PositionedAlign extends StatefulWidget {
   final Alignment alignment;
 
   final Widget child;
+
+  ///[RenderBox] of the [child] containing the [Size] of the [child].
+  ///If this is not-null, then position will NOT be aligned "lazily".
+  ///
+  ///Note: One way to get it, is using [LazyBuilder].
+  final RenderBox? box;
 
   ///Value of [LazyBuilder.forceTry], if true, will not display the [child]
   ///until the [RenderBox] of the [child] is obtained.
@@ -107,18 +114,22 @@ class _PositionedAlignState extends State<PositionedAlign> {
     super.initState();
   }
 
+  Widget correctedOffsetWidget(RenderBox box, Widget child) {
+    final correctOffset = getCorrectedOffset(box);
+    return Positioned(
+      left: correctOffset.dx,
+      top: correctOffset.dy,
+      child: child,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.box != null) return correctedOffsetWidget(widget.box!, child);
+
     return LazyBuilder(
       onError: onError,
-      builder: (context, box, child) {
-        final correctOffset = getCorrectedOffset(box);
-        return Positioned(
-          left: correctOffset.dx,
-          top: correctOffset.dy,
-          child: child,
-        );
-      },
+      builder: (context, box, child) => correctedOffsetWidget(box, child),
       forceTry: widget.forceTry,
       child: child,
     );

@@ -10,10 +10,10 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(title: const Text('Home')),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            Center(
-              child: OutlinedButton(
+        child: Center(
+          child: Column(
+            children: [
+              OutlinedButton(
                 onPressed: () {
                   showDialog(
                     context: context,
@@ -22,8 +22,22 @@ class HomePage extends StatelessWidget {
                 },
                 child: const Text('Show CommonAlertDialog'),
               ),
-            ),
-          ],
+              const SizedBox(height: 10),
+              OutlinedButton(
+                onPressed: () async {
+                  final option = await showDialog(
+                    context: context,
+                    builder: (_) => const BooleanDialog('Select from options'),
+                  );
+                  showDialog(
+                    context: context,
+                    builder: (_) => CommonAlertDialog('Selected $option'),
+                  );
+                },
+                child: const Text('Show BooleanDialog'),
+              ),
+            ],
+          ),
         ),
       ),
     );
