@@ -1,3 +1,20 @@
+## 0.4.0
+
+[Breaking Change]: 'Popup' framework. Now create Popup by first generating PopupController using
+BuildContext and show a Popup using 'show' method of the controller. Similarly close the 'Popup'
+either using same controller or, getting the same controller from inside the Popup widget using its
+context, and call the 'remove' method of the controller.
+
+Now can select the point of contact between the popup and the parent widget, using the 'parentAlign'
+parameter, to set the point according to the parent. And use 'childAlign' to set the alignment of
+the child around that pont.
+
+Added 'PopupScope' to create scoped 'Popup' widget, such that, 'Popup' does not go outside the
+bounds of 'PopupScope' child widget.
+
+Note:- Now 'Popup' uses 'PositionedAlign' for the child alignment so the 'Popup' will appear
+"lazily", to prevent it, provide 'childSize' parameter of the 'Popup'.
+
 ## 0.3.1
 
 Added new 'box' parameter in 'PositionedAlign', allowing 'synchronous' or 'NOT lazy' drawing of the
