@@ -1,3 +1,4 @@
+import 'package:example/pop_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:helpful_components/helpful_components.dart';
 
@@ -35,6 +36,16 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 child: const Text('Show BooleanDialog'),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const TestScreen()),
+                  );
+                },
+                child: const Text('Test Pop up'),
               ),
             ],
           ),

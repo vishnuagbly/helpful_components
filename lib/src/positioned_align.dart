@@ -32,7 +32,7 @@ class PositionedAlign extends StatefulWidget {
     this.alignment = Alignment.topLeft,
     this.forceTry,
     this.onError,
-    this.box,
+    this.size,
     required this.child,
     Key? key,
   }) : super(key: key);
@@ -64,11 +64,10 @@ class PositionedAlign extends StatefulWidget {
 
   final Widget child;
 
-  ///[RenderBox] of the [child] containing the [Size] of the [child].
   ///If this is not-null, then position will NOT be aligned "lazily".
   ///
   ///Note: One way to get it, is using [LazyBuilder].
-  final RenderBox? box;
+  final Size? size;
 
   ///Value of [LazyBuilder.forceTry], if true, will not display the [child]
   ///until the [RenderBox] of the [child] is obtained.
@@ -92,8 +91,7 @@ class _PositionedAlignState extends State<PositionedAlign> {
   late final Offset offset;
   late final LazyOnErrorWidgetBuilder onError;
 
-  Offset getCorrectedOffset(RenderBox box) {
-    final size = box.size;
+  Offset getCorrectedOffset(Size size) {
     final halfWidth = size.width / 2;
     final halfHeight = size.height / 2;
     final alignOffset = Offset(widget.alignment.x + 1, widget.alignment.y + 1);
@@ -114,8 +112,8 @@ class _PositionedAlignState extends State<PositionedAlign> {
     super.initState();
   }
 
-  Widget correctedOffsetWidget(RenderBox box, Widget child) {
-    final correctOffset = getCorrectedOffset(box);
+  Widget correctedOffsetWidget(Size size, Widget child) {
+    final correctOffset = getCorrectedOffset(size);
     return Positioned(
       left: correctOffset.dx,
       top: correctOffset.dy,
@@ -125,11 +123,11 @@ class _PositionedAlignState extends State<PositionedAlign> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.box != null) return correctedOffsetWidget(widget.box!, child);
+    if (widget.size != null) return correctedOffsetWidget(widget.size!, child);
 
     return LazyBuilder(
       onError: onError,
-      builder: (context, box, child) => correctedOffsetWidget(box, child),
+      builder: (context, box, child) => correctedOffsetWidget(box.size, child),
       forceTry: widget.forceTry,
       child: child,
     );
