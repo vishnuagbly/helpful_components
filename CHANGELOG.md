@@ -1,3 +1,7 @@
+## 0.4.1+1
+
+Updated Changelog for version 0.4.0
+
 ## 0.4.1
 
 Added many optional animation parameters in 'Popup'. Set 'animation' parameter in '
@@ -11,6 +15,8 @@ Added 'AnimatedInOut' new component.
 BuildContext and show a Popup using 'show' method of the controller. Similarly close the 'Popup'
 either using same controller or, getting the same controller from inside the Popup widget using its
 context, and call the 'remove' method of the controller.
+
+[Breaking Change]: Replaced 'box' parameter in 'PositionedAlign' to 'size'.
 
 Now can select the point of contact between the popup and the parent widget, using the 'parentAlign'
 parameter, to set the point according to the parent. And use 'childAlign' to set the alignment of
