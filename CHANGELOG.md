@@ -1,3 +1,10 @@
+## 0.4.1
+
+Added many optional animation parameters in 'Popup'. Set 'animation' parameter in '
+PopupController.show' method, to enable animations.
+
+Added 'AnimatedInOut' new component.
+
 ## 0.4.0
 
 [Breaking Change]: 'Popup' framework. Now create Popup by first generating PopupController using
