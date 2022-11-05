@@ -191,9 +191,11 @@ class PopupState extends State<Popup> {
     if (scopeBox != null) {
       position -= scopeBox.localToGlobal(Offset.zero);
     }
+    final halfWidth = size.width / 2;
+    final halfHeight = size.height / 2;
     position += Offset(
-      widget.parentAlign.x * size.width,
-      widget.parentAlign.y * size.height,
+      (widget.parentAlign.x * halfWidth) + halfWidth,
+      (widget.parentAlign.y * halfHeight) + halfHeight,
     );
 
     return PositionedAlign(
