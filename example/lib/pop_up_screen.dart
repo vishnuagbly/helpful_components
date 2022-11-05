@@ -32,8 +32,8 @@ class _TestScreenState extends State<TestScreen> {
                 child: InkWell(
                   onTap: () async {
                     PopupController.of(context).show(
+                      animation: true,
                       builder: (context) => Popup(
-                        parentKey: key,
                         child: InkWell(
                           onTap: () => PopupController.of(context).remove(),
                           child: Container(

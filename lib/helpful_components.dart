@@ -1,6 +1,6 @@
 library helpful_components;
 
-export 'src/Pop_up_scope.dart';
+export 'src/pop_up_scope.dart';
 export 'src/boolean_dialog.dart';
 export 'src/common_alert_dialog.dart';
 export 'src/common_snapshot_responses.dart';

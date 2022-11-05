@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:helpful_components/src/animated_in_out.dart';
+import 'package:helpful_components/src/animation_switch_controller.dart';
 
-import 'Pop_up_scope.dart';
+import 'pop_up_scope.dart';
 import 'positioned_align.dart';
 
 class _PopupInherited extends InheritedWidget {
@@ -20,6 +22,7 @@ class PopupController {
   OverlayEntry? _overlayEntry;
   final String id;
   final GlobalKey<PopupScopeState>? key;
+  AnimationSwitchController? _animationController;
   final BuildContext context;
   bool _mounted = false;
 
@@ -31,8 +34,16 @@ class PopupController {
     this.key,
   });
 
-  void _mount(Widget child) {
+  void _mount(
+    Widget child,
+    bool animation,
+    AnimationSwitchController? controller,
+  ) {
     _mounted = true;
+
+    if (animation) {
+      _animationController = controller ?? AnimationSwitchController();
+    }
 
     final scope = key?.currentState;
     if (scope != null) {
@@ -61,6 +72,8 @@ class PopupController {
     bool barrierDismissible = true,
     bool showBarrierColor = false,
     Color barrierColor = Colors.black38,
+    AnimationSwitchController? animationController,
+    bool animation = false,
   }) {
     if (mounted) {
       throw PlatformException(
@@ -91,7 +104,7 @@ class PopupController {
       );
     }
 
-    _mount(child);
+    _mount(child, animation, animationController);
     return this;
   }
 
@@ -99,13 +112,20 @@ class PopupController {
   ///
   ///If no popup is being shown via this controller then, this will throw
   ///error.
-  void remove() {
+  Future<void> remove() async {
     if (!_mounted) {
       throw PlatformException(
         code: 'NO_POPUP',
         message: 'No popup as added to remove',
       );
     }
+
+    if (_animationController != null) {
+      await _animationController!.setValue(true);
+      _animationController!.dispose();
+      _animationController = null;
+    }
+
     if (_overlayEntry != null) return _overlayEntry!.remove();
     key?.currentState?.removePopup(id);
     _mounted = false;
@@ -139,21 +159,36 @@ class Popup extends StatefulWidget {
   ///For preventing frame loss, define
   ///
   ///Create a popup, here [parentKey] key is important as the popup will appear
-  ///according to the parent widget represented by the [parentKey] only.
+  ///according to the parent widget represented by the [parentKey].
+  ///
+  ///If [parentKey] is not provided then the popup will appear at the top-left
+  ///corner of the screen or [PopupScope]. Use [childAlign] and [offset]
+  ///parameters to add offset and align the popup.
+  ///
+  ///Note:- To enable animation, Set [animation] from [PopupController.show] to
+  ///true.
   const Popup({
     required this.child,
-    required this.parentKey,
+    this.parentKey,
     Key? key,
     this.childAlign = Alignment.topLeft,
     this.parentAlign = Alignment.bottomRight,
     this.childSize,
+    this.offset = Offset.zero,
+    this.transitionBuilder,
+    this.switchOutCurve = Curves.linear,
+    this.switchInCurve = Curves.linear,
+    this.inAnimationWithController = false,
   }) : super(key: key);
 
   final Widget child;
 
   ///GlobalKey of the parent widget in the widget tree, relative to which we
   ///want to show our popup.
-  final GlobalKey parentKey;
+  final GlobalKey? parentKey;
+
+  ///To add an offset to the popup from its position after [parentAlign].
+  final Offset offset;
 
   ///Defines the popup alignment at the [parentAlign] position of the parent.
   final Alignment childAlign;
@@ -165,47 +200,67 @@ class Popup extends StatefulWidget {
   ///creating the popup "lazily".
   final Size? childSize;
 
+  final AnimatedSwitcherTransitionBuilder? transitionBuilder;
+  final Curve switchInCurve;
+  final Curve switchOutCurve;
+  final bool inAnimationWithController;
+
   @override
   PopupState createState() => PopupState();
 }
 
 class PopupState extends State<Popup> {
-  late final RenderBox renderBox;
-  late final Size size;
+  late final RenderBox? renderBox;
+  late final Size? size;
 
   @override
   void initState() {
     renderBox =
-        widget.parentKey.currentContext!.findRenderObject() as RenderBox;
-    size = renderBox.size;
+        widget.parentKey?.currentContext?.findRenderObject() as RenderBox?;
+    size = renderBox?.size;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var position = renderBox.localToGlobal(Offset.zero);
+    var position = renderBox?.localToGlobal(Offset.zero) ?? Offset.zero;
     final scopeBox = PopupScope.of(context)
         ?.key
         .currentContext
         ?.findRenderObject() as RenderBox?;
-    if (scopeBox != null) {
+    if (scopeBox != null && widget.parentKey != null) {
       position -= scopeBox.localToGlobal(Offset.zero);
     }
+    final size = this.size ?? Size.zero;
     final halfWidth = size.width / 2;
     final halfHeight = size.height / 2;
     position += Offset(
       (widget.parentAlign.x * halfWidth) + halfWidth,
       (widget.parentAlign.y * halfHeight) + halfHeight,
     );
+    position += widget.offset;
+
+    final controller = PopupController.of(context);
+
+    final child = Material(
+      color: Colors.transparent,
+      child: widget.child,
+    );
 
     return PositionedAlign(
       offset: position,
       alignment: widget.childAlign,
       size: widget.childSize,
-      child: Material(
-        color: Colors.transparent,
-        child: widget.child,
-      ),
+      child: controller._animationController != null
+          ? AnimatedInOut(
+              duration: controller._animationController?.duration,
+              controller: controller._animationController,
+              transitionBuilder: widget.transitionBuilder,
+              switchInCurve: widget.switchInCurve,
+              switchOutCurve: widget.switchOutCurve,
+              child: child,
+            )
+          : child,
     );
   }
 }
