@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helpful_components/helpful_components.dart';
 
 class PopupScopeData {
   PopupScopeData(this.key);
@@ -19,6 +20,10 @@ class _InheritedPopupScope extends InheritedWidget {
 }
 
 class PopupScope extends StatefulWidget {
+  ///Wrap your widget, inside which want to show localised popups.
+  ///
+  ///As default [PopupController] object, generated or gotten inside this will
+  ///show [Popup] inside this only.
   PopupScope({
     Key? key,
     required this.builder,

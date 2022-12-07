@@ -18,6 +18,12 @@ class _PopupInherited extends InheritedWidget {
   }
 }
 
+///To show and remove a popup on the screen.
+///
+///Get a [PopupController] object, using the [PopupController.of] static method.
+///
+///Using this, one can show popups either inside a [PopupScope] or using an
+///[Overlay], i.e above the whole screen.
 class PopupController {
   OverlayEntry? _overlayEntry;
   final String id;
@@ -133,9 +139,21 @@ class PopupController {
 
   static String get _uniqueId => DateTime.now().toString();
 
+  ///Return a [PopupController] object. This also determines, whether the popup
+  ///will show using an [Overlay] over whole screen, or inside a [PopupScope].
+  ///
+  ///[PopupController] returned, will be of the nearest [PopupScope] parent,
+  ///which if not exists, then it will be for [Overlay].
+  ///
+  ///If called inside a [Popup] will return the [PopupController] of that
+  ///[Popup] only, i.e cannot use it to show more [Popup], but instead can use
+  ///to remove the [Popup] dynamically, using [PopupController.remove] method.
+  ///
   ///If [forceOverlay] is true, then pop up will be displayed as an
   ///[OverlayEntry], i.e like there is no [PopupScope] above in the widget tree,
   ///regardless of it actually exists or not.
+  ///
+  ///Use [id] to specify own specific id, of the popup.
   static PopupController of(
     BuildContext context, {
     String? id,
@@ -154,9 +172,19 @@ class PopupController {
 ///Create a popup, here [parentKey] key is important as the popup will appear
 ///according to the parent widget represented by the [parentKey] only.
 class Popup extends StatefulWidget {
+  ///Widget to be returned from the builder parameter of [PopupController.show].
+  ///
+  ///Show this widget by firstly getting a [PopupController] object using
+  ///[PopupController.of] static method. For further information look
+  ///documentation of [PopupController].
+  ///
+  ///Also can use [PopupScope] to show popups localized on a widget, i.e popup
+  ///will only be displayed inside that widget, using offsets local to that
+  ///widget. For further information look documentation of [PopupScope].
+  ///
   ///Uses [PositionedAlign] to align the child according to the given alignment.
   ///
-  ///For preventing frame loss, define
+  ///For preventing frame loss, define [childSize].
   ///
   ///Create a popup, here [parentKey] key is important as the popup will appear
   ///according to the parent widget represented by the [parentKey].

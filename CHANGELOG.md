@@ -1,3 +1,7 @@
+## 0.4.1+2
+
+Updated documentation for 'Popup', 'PopupScope' and 'PopupController'.
+
 ## 0.4.1+1
 
 Updated Changelog for version 0.4.0
