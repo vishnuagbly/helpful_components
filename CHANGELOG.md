@@ -1,3 +1,11 @@
+## 0.4.2
+
+Added new "builder" method in 'PositionedAlign'.
+
+Now, no frame loss, in case of default alignment, Alignment.topLeft, in 'PositionedAlign'.
+
+Fixed the bug in 'Popup', of no popup appearing when "animation" is true and "childSize" is null.
+
 ## 0.4.1+2
 
 Updated documentation for 'Popup', 'PopupScope' and 'PopupController'.
