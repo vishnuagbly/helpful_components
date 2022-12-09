@@ -172,7 +172,11 @@ class PopupController {
 ///Create a popup, here [parentKey] key is important as the popup will appear
 ///according to the parent widget represented by the [parentKey] only.
 class Popup extends StatefulWidget {
-  ///Widget to be returned from the builder parameter of [PopupController.show].
+  ///NOTE:- This widget uses [PositionedAlign] Widget, which may cause, loss of
+  ///frame. For further information, look into the Documentation of
+  ///[PositionedAlign].
+  ///
+  ///This should be returned from the builder parameter of [PopupController.show].
   ///
   ///Show this widget by firstly getting a [PopupController] object using
   ///[PopupController.of] static method. For further information look
@@ -279,7 +283,8 @@ class PopupState extends State<Popup> {
       offset: position,
       alignment: widget.childAlign,
       size: widget.childSize,
-      child: controller._animationController != null
+      child: child,
+      builder: (_, __, child) => controller._animationController != null
           ? AnimatedInOut(
               duration: controller._animationController?.duration,
               controller: controller._animationController,

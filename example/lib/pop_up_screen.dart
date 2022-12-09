@@ -34,6 +34,10 @@ class _TestScreenState extends State<TestScreen> {
                     PopupController.of(context).show(
                       animation: true,
                       builder: (context) => Popup(
+                        parentKey: key,
+                        offset: const Offset(0, 10),
+                        parentAlign: Alignment.bottomCenter,
+                        childAlign: Alignment.centerLeft,
                         child: InkWell(
                           onTap: () => PopupController.of(context).remove(),
                           child: Container(

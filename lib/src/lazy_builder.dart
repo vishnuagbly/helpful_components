@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 typedef LazyOnErrorWidgetBuilder = Widget Function(
     BuildContext, Object?, Widget);
 
+typedef LazyWidgetBuilder = Widget Function(BuildContext, RenderBox, Widget);
+
 ///Can be used to build a [Widget] lazily, such that, we can get the [RenderBox]
 ///for the [Widget] then build another widget accordingly.
 class LazyBuilder extends StatefulWidget {
@@ -28,7 +30,7 @@ class LazyBuilder extends StatefulWidget {
   ///[child] itself.
   ///
   ///Default function, will simply return [child] itself.
-  final Widget Function(BuildContext, RenderBox, Widget)? builder;
+  final LazyWidgetBuilder? builder;
 
   ///Used to generate [Widget] in case of an error. Error is passed as Nullable
   ///[Object].
@@ -116,12 +118,12 @@ class _LazyBuilderState extends State<LazyBuilder> {
       child: parentConstraints == null
           ? child
           : OverflowBox(
-        maxHeight: parentConstraints.maxHeight,
-        minHeight: parentConstraints.minHeight,
-        maxWidth: parentConstraints.maxWidth,
-        minWidth: parentConstraints.minWidth,
-        child: child,
-      ),
+              maxHeight: parentConstraints.maxHeight,
+              minHeight: parentConstraints.minHeight,
+              maxWidth: parentConstraints.maxWidth,
+              minWidth: parentConstraints.minWidth,
+              child: child,
+            ),
     );
   }
 

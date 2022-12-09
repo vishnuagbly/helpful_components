@@ -2,37 +2,40 @@ import 'package:flutter/material.dart';
 
 import 'lazy_builder.dart';
 
-///A widget that will control where the child of the [Stack] will be placed and
-///at what position, according to the [alignment], of the [child] will be the
-///[offset].
-///
-///Example:-
-///```dart
-///PositionedAlign(
-///  x: 10,
-///  y: 10,
-///  alignment: Alignment.center,
-///  child: Container(
-///    color: Colors.red,
-///    width: 100,
-///    height: 100,
-///  ),
-///);
-///```
-///
-///In the above case, at [offset] from the top-left corner of the [Stack], there
-///will be the center of the [child].
-///
-///Note:- This uses [LazyBuilder] to position [child] according to the
-///alignment, therefore, it might not always be able to position it correctly,
-///always. Hence, it is recommended to define [onError] or [forceTry] variables.
 class PositionedAlign extends StatefulWidget {
+  ///A widget that will control where the child of the [Stack] will be placed and
+  ///at what position, according to the [alignment], of the [child] will be the
+  ///[offset].
+  ///
+  ///Example:-
+  ///```dart
+  ///PositionedAlign(
+  ///  x: 10,
+  ///  y: 10,
+  ///  alignment: Alignment.center,
+  ///  child: Container(
+  ///    color: Colors.red,
+  ///    width: 100,
+  ///    height: 100,
+  ///  ),
+  ///);
+  ///```
+  ///
+  ///In the above case, at [offset] from the top-left corner of the [Stack], there
+  ///will be the center of the [child].
+  ///
+  ///Note:- This uses [LazyBuilder] to position [child] according to the
+  ///alignment, therefore, it might not always be able to position it correctly,
+  ///always. Hence, it is recommended to define [onError] or [forceTry] variables.
+  ///
+  ///Note:- In case of [alignment] being [Alignment.topLeft], no frame is loss.
   const PositionedAlign({
     this.offset,
     this.alignment = Alignment.topLeft,
     this.forceTry,
     this.onError,
     this.size,
+    this.builder,
     required this.child,
     Key? key,
   }) : super(key: key);
@@ -63,6 +66,14 @@ class PositionedAlign extends StatefulWidget {
   final Alignment alignment;
 
   final Widget child;
+
+  ///To be used if want to build the widget, differently, according to the
+  ///[RenderBox] received of the [child].
+  ///
+  ///Note:- For the correct alignment, it is required that the returned [Widget]
+  ///from this, should have the same size as of [child], i.e it should not
+  ///change the size of the [child].
+  final LazyWidgetBuilder? builder;
 
   ///If this is not-null, then position will NOT be aligned "lazily".
   ///
@@ -123,11 +134,20 @@ class _PositionedAlignState extends State<PositionedAlign> {
 
   @override
   Widget build(BuildContext context) {
+    defaultChildFn(context, box, child) => child;
+
+    if (widget.alignment == Alignment.topLeft) {
+      return correctedOffsetWidget(Size.zero, child);
+    }
+
     if (widget.size != null) return correctedOffsetWidget(widget.size!, child);
 
     return LazyBuilder(
       onError: onError,
-      builder: (context, box, child) => correctedOffsetWidget(box.size, child),
+      builder: (context, box, child) => correctedOffsetWidget(
+        box.size,
+        (widget.builder ?? defaultChildFn)(context, box, child),
+      ),
       forceTry: widget.forceTry,
       child: child,
     );
