@@ -32,19 +32,25 @@ class _TestScreenState extends State<TestScreen> {
                 child: InkWell(
                   onTap: () async {
                     PopupController.of(context).show(
-                      animation: true,
-                      builder: (context) => Popup(
-                        parentKey: key,
-                        offset: const Offset(0, 10),
-                        parentAlign: Alignment.bottomCenter,
-                        childAlign: Alignment.centerLeft,
-                        child: InkWell(
-                          onTap: () => PopupController.of(context).remove(),
-                          child: Container(
-                            height: 50,
-                            width: 100,
-                            color: Colors.red,
-                          ),
+                      animation: false,
+                      builder: (context) => LazyBuilder(
+                        builder: (context, box, child) {
+                          return Popup(
+                            parentKey: key,
+                            offset: const Offset(0, 10),
+                            parentAlign: Alignment.bottomCenter,
+                            childAlign: Alignment.centerLeft,
+                            childSize: box.size,
+                            child: InkWell(
+                              onTap: () => PopupController.of(context).remove(),
+                              child: child,
+                            ),
+                          );
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 100,
+                          color: Colors.red,
                         ),
                       ),
                     );

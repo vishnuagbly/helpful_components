@@ -1,3 +1,8 @@
+## 0.4.4
+
+Now the "builder" parameter in 'PopupController.show' method, can return any widget, while it is
+recommended to return either a 'Popup', or a 'Positioned' and similar widget.
+
 ## 0.4.3
 
 Added new "builder" method in 'Popup' as well.

@@ -71,8 +71,12 @@ class PopupController {
   ///
   ///[barrierDismissible] and [showBarrierColor] only works in case of there is
   ///no [PopupScope] above in the widget tree.
+  ///
+  ///It is recommended for [builder] to return [Popup], while it can also return
+  ///a [Positioned] or a [Builder] widget which returns [Positioned] or similar
+  ///widget.
   PopupController show({
-    required Popup Function(BuildContext context) builder,
+    required WidgetBuilder builder,
     bool barrierDismissible = true,
     bool showBarrierColor = false,
     Color barrierColor = Colors.black38,
@@ -88,7 +92,7 @@ class PopupController {
 
     Widget child = _PopupInherited(
       controller: this,
-      child: Builder(builder: (_) => builder(_)),
+      child: Builder(builder: builder),
     );
 
     if (key == null) {
@@ -286,26 +290,35 @@ class PopupState extends State<Popup> {
 
     final controller = PopupController.of(context);
 
-    final child = Material(
+    ///This is the main child content, i.e without animations.
+    final staticChild = Material(
       color: Colors.transparent,
       child: widget.child,
     );
+
+    Widget genChild(Widget child) {
+      Widget animatedChild(Widget child) {
+        return AnimatedInOut(
+          duration: controller._animationController?.duration,
+          controller: controller._animationController,
+          transitionBuilder: widget.transitionBuilder,
+          switchInCurve: widget.switchInCurve,
+          switchOutCurve: widget.switchOutCurve,
+          child: child,
+        );
+      }
+
+      return controller._animationController != null
+          ? animatedChild(child)
+          : child;
+    }
 
     return PositionedAlign(
       offset: position,
       alignment: widget.childAlign,
       size: widget.childSize,
-      child: child,
-      builder: (_, __, child) => controller._animationController != null
-          ? AnimatedInOut(
-              duration: controller._animationController?.duration,
-              controller: controller._animationController,
-              transitionBuilder: widget.transitionBuilder,
-              switchInCurve: widget.switchInCurve,
-              switchOutCurve: widget.switchOutCurve,
-              child: builder(_, __, child),
-            )
-          : child,
+      child: widget.childSize != null ? genChild(staticChild) : staticChild,
+      builder: (_, __, child) => genChild(builder(_, __, child)),
     );
   }
 }
