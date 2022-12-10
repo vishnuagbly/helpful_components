@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:helpful_components/helpful_components.dart';
 import 'package:helpful_components/src/animated_in_out.dart';
 import 'package:helpful_components/src/animation_switch_controller.dart';
-
-import 'pop_up_scope.dart';
-import 'positioned_align.dart';
 
 class _PopupInherited extends InheritedWidget {
   final PopupController controller;
@@ -208,6 +206,7 @@ class Popup extends StatefulWidget {
     this.childSize,
     this.offset = Offset.zero,
     this.transitionBuilder,
+    this.builder,
     this.switchOutCurve = Curves.linear,
     this.switchInCurve = Curves.linear,
     this.inAnimationWithController = false,
@@ -232,6 +231,16 @@ class Popup extends StatefulWidget {
   ///creating the popup "lazily".
   final Size? childSize;
 
+  ///This will be called after the size of [child] is found. As default it will
+  ///return the [child] only.
+  ///
+  ///Note:- This should not change the size of the [child], for correct
+  ///positioning and alignment.
+  ///
+  ///Note:- This is not called when either [childSize] is not null, or,
+  ///[childAlign] is [Alignment.topLeft].
+  final LazyWidgetBuilder? builder;
+
   final AnimatedSwitcherTransitionBuilder? transitionBuilder;
   final Curve switchInCurve;
   final Curve switchOutCurve;
@@ -255,6 +264,9 @@ class PopupState extends State<Popup> {
 
   @override
   Widget build(BuildContext context) {
+    defaultBuilder(BuildContext context, RenderBox box, Widget child) => child;
+    final builder = widget.builder ?? defaultBuilder;
+
     var position = renderBox?.localToGlobal(Offset.zero) ?? Offset.zero;
     final scopeBox = PopupScope.of(context)
         ?.key
@@ -291,7 +303,7 @@ class PopupState extends State<Popup> {
               transitionBuilder: widget.transitionBuilder,
               switchInCurve: widget.switchInCurve,
               switchOutCurve: widget.switchOutCurve,
-              child: child,
+              child: builder(_, __, child),
             )
           : child,
     );

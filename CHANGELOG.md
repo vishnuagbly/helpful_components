@@ -1,3 +1,9 @@
+## 0.4.3
+
+Added new "builder" method in 'Popup' as well.
+
+Updated documentation for "builder" parameter in 'PositionedAlign'.
+
 ## 0.4.2
 
 Added new "builder" method in 'PositionedAlign'.

@@ -73,6 +73,9 @@ class PositionedAlign extends StatefulWidget {
   ///Note:- For the correct alignment, it is required that the returned [Widget]
   ///from this, should have the same size as of [child], i.e it should not
   ///change the size of the [child].
+  ///
+  ///Note:- This is not called when either the [size] is not null, or,
+  ///[alignment] is [Alignment.topLeft].
   final LazyWidgetBuilder? builder;
 
   ///If this is not-null, then position will NOT be aligned "lazily".
