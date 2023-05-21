@@ -56,7 +56,7 @@ class PopupController {
     }
 
     final overlayEntry = OverlayEntry(builder: (context) => child);
-    Overlay.of(context)!.insert(overlayEntry);
+    Overlay.of(context).insert(overlayEntry);
     _overlayEntry = overlayEntry;
   }
 
@@ -69,7 +69,7 @@ class PopupController {
   ///tree, using [PopupController.of] method, on which one can call [remove]
   ///method.
   ///
-  ///[barrierDismissible] and [showBarrierColor] only works in case of there is
+  ///[barrierDismissible] and [showBarrier] only works in case of there is
   ///no [PopupScope] above in the widget tree.
   ///
   ///It is recommended for [builder] to return [Popup], while it can also return
@@ -78,7 +78,7 @@ class PopupController {
   PopupController show({
     required WidgetBuilder builder,
     bool barrierDismissible = true,
-    bool showBarrierColor = false,
+    bool showBarrier = false,
     Color barrierColor = Colors.black38,
     AnimationSwitchController? animationController,
     bool animation = false,
@@ -98,15 +98,16 @@ class PopupController {
     if (key == null) {
       child = Stack(
         children: [
-          Material(
-            color: Colors.transparent,
-            child: GestureDetector(
-              onTap: barrierDismissible ? remove : null,
-              child: Container(
-                color: showBarrierColor ? barrierColor : Colors.transparent,
+          if (showBarrier)
+            Material(
+              color: Colors.transparent,
+              child: GestureDetector(
+                onTap: barrierDismissible ? remove : null,
+                child: Container(
+                  color: barrierColor,
+                ),
               ),
             ),
-          ),
           child,
         ],
       );

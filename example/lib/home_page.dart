@@ -30,6 +30,7 @@ class HomePage extends StatelessWidget {
                     context: context,
                     builder: (_) => const BooleanDialog('Select from options'),
                   );
+                  if (!context.mounted) return;
                   showDialog(
                     context: context,
                     builder: (_) => CommonAlertDialog('Selected $option'),

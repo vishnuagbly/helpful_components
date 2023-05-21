@@ -39,6 +39,6 @@ class CommonAsyncSnapshotResponses<T> extends StatelessWidget {
     if (!snapshot.hasData) {
       return const Center(child: Text("No Data Available"));
     }
-    return onData == null ? Container() : onData!(snapshot.data!);
+    return onData == null ? Container() : onData!(snapshot.data as T);
   }
 }

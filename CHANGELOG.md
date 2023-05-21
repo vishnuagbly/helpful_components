@@ -1,3 +1,13 @@
+## 0.5.0
+
+[Breaking Change]: Changed "showBarrierColor" parameter in 'PopupController.show' method, to "showBarrier" parameter.
+Now with "showBarrier" mode false, no material screen will be added before the original pop up
+child.
+
+Added support for Dart 3
+
+Updated some deprecated flutter methods.
+
 ## 0.4.4
 
 Now the "builder" parameter in 'PopupController.show' method, can return any widget, while it is

@@ -51,7 +51,7 @@ class RowInfo extends StatelessWidget {
             Text(
               firstText ?? "",
               style: firstStyle ??
-                  Theme.of(context).textTheme.bodyText1?.copyWith(
+                  Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w400,
                         fontSize: firstSize,
                         color: firstColor ??
@@ -62,7 +62,7 @@ class RowInfo extends StatelessWidget {
             Text(
               secondText ?? "",
               style: secondStyle ??
-                  Theme.of(context).textTheme.bodyText2?.copyWith(
+                  Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w300,
                         fontSize: secondSize,
                         color: secondColor ??
