@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 typedef LazyOnErrorWidgetBuilder = Widget Function(
@@ -73,7 +71,6 @@ class _LazyBuilderState extends State<LazyBuilder> {
   RenderBox? renderBox;
 
   void _init() {
-    log('initiating', name: '$this');
     offstage = true;
     forceTry = widget.forceTry ?? false;
     key = GlobalKey();

@@ -1,3 +1,6 @@
+## 0.5.0+1
+Removed useless log of "initiating" from 'LazyBuilder'.
+
 ## 0.5.0
 
 [Breaking Change]: Changed "showBarrierColor" parameter in 'PopupController.show' method, to "showBarrier" parameter.
