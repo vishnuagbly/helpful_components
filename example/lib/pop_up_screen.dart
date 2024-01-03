@@ -31,8 +31,10 @@ class _TestScreenState extends State<TestScreen> {
                 left: 10,
                 child: InkWell(
                   onTap: () async {
-                    PopupController.of(context).show(
+                    PopupController.of(context, forceOverlay: true).show(
                       animation: false,
+                      showBarrier: true,
+                      barrierColor: Colors.transparent,
                       builder: (context) => LazyBuilder(
                         builder: (context, box, child) {
                           return Popup(
