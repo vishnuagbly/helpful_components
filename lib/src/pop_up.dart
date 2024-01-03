@@ -28,6 +28,7 @@ class PopupController {
   final GlobalKey<PopupScopeState>? key;
   AnimationSwitchController? _animationController;
   final BuildContext context;
+  void Function()? onDismiss;
   bool _mounted = false;
 
   bool get mounted => _mounted;
@@ -36,6 +37,7 @@ class PopupController {
     required this.context,
     required this.id,
     this.key,
+    this.onDismiss,
   });
 
   void _mount(
@@ -75,6 +77,9 @@ class PopupController {
   ///It is recommended for [builder] to return [Popup], while it can also return
   ///a [Positioned] or a [Builder] widget which returns [Positioned] or similar
   ///widget.
+  ///
+  ///Provide [onDismiss] function to perform any callback action on dismissing
+  ///the popup.
   PopupController show({
     required WidgetBuilder builder,
     bool barrierDismissible = true,
@@ -82,7 +87,10 @@ class PopupController {
     Color barrierColor = Colors.black38,
     AnimationSwitchController? animationController,
     bool animation = false,
+    void Function()? onDismiss,
   }) {
+    if (onDismiss != null) this.onDismiss = onDismiss;
+
     if (mounted) {
       throw PlatformException(
         code: 'POPUP_ALREADY_EXIST',
@@ -135,6 +143,7 @@ class PopupController {
       _animationController = null;
     }
 
+    onDismiss?.call();
     if (_overlayEntry != null) return _overlayEntry!.remove();
     key?.currentState?.removePopup(id);
     _mounted = false;
@@ -157,10 +166,14 @@ class PopupController {
   ///regardless of it actually exists or not.
   ///
   ///Use [id] to specify own specific id, of the popup.
+  ///
+  ///Provide [onDismiss] function to perform any callback action on dismissing
+  ///the popup.
   static PopupController of(
     BuildContext context, {
     String? id,
     bool forceOverlay = false,
+    void Function()? onDismiss,
   }) {
     final popupInherited =
         context.dependOnInheritedWidgetOfExactType<_PopupInherited>();
@@ -168,7 +181,12 @@ class PopupController {
 
     id ??= _uniqueId;
     final scope = forceOverlay ? null : PopupScope.of(context);
-    return PopupController._(context: context, id: id, key: scope?.key);
+    return PopupController._(
+      context: context,
+      id: id,
+      key: scope?.key,
+      onDismiss: onDismiss,
+    );
   }
 }
 

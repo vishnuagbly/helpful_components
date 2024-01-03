@@ -1,3 +1,7 @@
+## 0.5.1
+Added [onDismiss] parameter for 'PopupController'. Can set this parameter from either 
+'PopupController.show' method, or using 'PopupController.of' static method.
+
 ## 0.5.0+1
 Removed useless log of "initiating" from 'LazyBuilder'.
 
