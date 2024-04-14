@@ -107,12 +107,15 @@ class PopupController {
       child = Stack(
         children: [
           if (showBarrier)
-            Material(
-              color: Colors.transparent,
-              child: GestureDetector(
-                onTap: barrierDismissible ? remove : null,
-                child: Container(
-                  color: barrierColor,
+            IgnorePointer(
+              ignoring: !barrierDismissible,
+              child: Material(
+                color: Colors.transparent,
+                child: GestureDetector(
+                  onTap: barrierDismissible ? remove : null,
+                  child: Container(
+                    color: barrierColor,
+                  ),
                 ),
               ),
             ),

@@ -1,3 +1,7 @@
+## 0.5.2
+Now, on setting [barrierDismissible] to 'true', will also cause 'IgnorePointer', on the barrier.
+Note:- The original pop-up [child] will still able to detect all mouse events.
+
 ## 0.5.1
 Added [onDismiss] parameter for 'PopupController'. Can set this parameter from either 
 'PopupController.show' method, or using 'PopupController.of' static method.
