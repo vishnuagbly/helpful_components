@@ -80,6 +80,11 @@ class PopupController {
   ///
   ///Provide [onDismiss] function to perform any callback action on dismissing
   ///the popup.
+  ///
+  ///Provide [onHoverInBarrier] to provide a callback for the [onHover] method
+  ///of the Barrier.
+  ///
+  ///Provide [dismissCondition] to dismiss the popup conditionally.
   PopupController show({
     required WidgetBuilder builder,
     bool barrierDismissible = true,
@@ -87,6 +92,8 @@ class PopupController {
     Color barrierColor = Colors.black38,
     AnimationSwitchController? animationController,
     bool animation = false,
+    void Function(PointerHoverEvent)? onHoverInBarrier,
+    bool Function(TapDownDetails)? dismissCondition,
     void Function()? onDismiss,
   }) {
     if (onDismiss != null) this.onDismiss = onDismiss;
@@ -111,10 +118,19 @@ class PopupController {
               ignoring: !barrierDismissible,
               child: Material(
                 color: Colors.transparent,
-                child: GestureDetector(
-                  onTap: barrierDismissible ? remove : null,
-                  child: Container(
-                    color: barrierColor,
+                child: MouseRegion(
+                  onHover: onHoverInBarrier,
+                  child: GestureDetector(
+                    onTapDown: (details) async {
+                      if (!((dismissCondition?.call(details) ?? true) &&
+                          barrierDismissible)) {
+                        return;
+                      }
+                      await remove();
+                    },
+                    child: Container(
+                      color: barrierColor,
+                    ),
                   ),
                 ),
               ),
