@@ -24,6 +24,9 @@ class PopupScope extends StatefulWidget {
   ///
   ///As default [PopupController] object, generated or gotten inside this will
   ///show [Popup] inside this only.
+  ///
+  ///Note:- PopupScope will expand to take all the space available by the
+  ///Parent Widget.
   PopupScope({
     Key? key,
     required this.builder,
@@ -60,13 +63,16 @@ class PopupScopeState extends State<PopupScope> {
   Widget build(BuildContext context) {
     return _InheritedPopupScope(
       data: PopupScopeData(widget.key as GlobalKey<PopupScopeState>),
-      child: Builder(
-          builder: (context) => Stack(
-                children: [
-                  widget.builder(context),
-                  ...popups.values,
-                ],
-              )),
+      child: Stack(
+        children: [
+          SizedBox(
+            height: double.infinity,
+            width: double.infinity,
+            child: Builder(builder: widget.builder),
+          ),
+          ...popups.values,
+        ],
+      ),
     );
   }
 }

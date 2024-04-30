@@ -71,9 +71,6 @@ class PopupController {
   ///tree, using [PopupController.of] method, on which one can call [remove]
   ///method.
   ///
-  ///[barrierDismissible] and [showBarrier] only works in case of there is
-  ///no [PopupScope] above in the widget tree.
-  ///
   ///It is recommended for [builder] to return [Popup], while it can also return
   ///a [Positioned] or a [Builder] widget which returns [Positioned] or similar
   ///widget.
@@ -105,40 +102,36 @@ class PopupController {
       );
     }
 
-    Widget child = _PopupInherited(
-      controller: this,
-      child: Builder(builder: builder),
-    );
-
-    if (key == null) {
-      child = Stack(
-        children: [
-          if (showBarrier)
-            IgnorePointer(
-              ignoring: !barrierDismissible,
-              child: Material(
-                color: Colors.transparent,
-                child: MouseRegion(
-                  onHover: onHoverInBarrier,
-                  child: GestureDetector(
-                    onTapDown: (details) async {
-                      if (!((dismissCondition?.call(details) ?? true) &&
-                          barrierDismissible)) {
-                        return;
-                      }
-                      await remove();
-                    },
-                    child: Container(
-                      color: barrierColor,
-                    ),
+    final Widget child = Stack(
+      children: [
+        if (showBarrier)
+          IgnorePointer(
+            ignoring: !barrierDismissible,
+            child: Material(
+              color: Colors.transparent,
+              child: MouseRegion(
+                onHover: onHoverInBarrier,
+                child: GestureDetector(
+                  onTapDown: (details) async {
+                    if (!((dismissCondition?.call(details) ?? true) &&
+                        barrierDismissible)) {
+                      return;
+                    }
+                    await remove();
+                  },
+                  child: Container(
+                    color: barrierColor,
                   ),
                 ),
               ),
             ),
-          child,
-        ],
-      );
-    }
+          ),
+        _PopupInherited(
+          controller: this,
+          child: Builder(builder: builder),
+        ),
+      ],
+    );
 
     _mount(child, animation, animationController);
     return this;

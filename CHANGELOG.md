@@ -1,3 +1,7 @@
+## 1.0.0
+[Breaking Change]: Now `barrier` also works with `PopupScope`, while, now, `PopupScope` will
+take all the available space provided by the parent widget.
+
 ## 0.5.3
 Added two new methods "onHoverInBarrier" and "dismissCondition" to the 'PopupController.show' 
 method. 
