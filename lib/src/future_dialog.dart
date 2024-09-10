@@ -16,6 +16,7 @@ class FutureDialog<T> extends StatelessWidget {
     this.onLoading,
     this.debug = false,
     this.throwError = false,
+    this.autoClose = false,
     Key? key,
   }) : super(key: key);
 
@@ -24,6 +25,9 @@ class FutureDialog<T> extends StatelessWidget {
   final bool debug, throwError;
   final Widget Function(Object? error)? onError;
   final Widget Function()? onLoading;
+
+  ///Automatically Close the dialog after loading.
+  final bool autoClose;
 
   ///executes when either future is done with no error or returns data.
   ///
@@ -40,6 +44,12 @@ class FutureDialog<T> extends StatelessWidget {
     return FutureBuilder<T>(
       future: future,
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && autoClose) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pop(context);
+          });
+        }
+
         if (snapshot.hasData ||
             (snapshot.connectionState == ConnectionState.done &&
                 !snapshot.hasError)) {

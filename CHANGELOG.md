@@ -1,3 +1,7 @@
+## 1.1.0
+Added `autoClose` parameter in `FutureDialog`.
+Fixed a warning in `CommonAlertDialog`.
+
 ## 1.0.0
 [Breaking Change]: Now `barrier` also works with `PopupScope`, while, now, `PopupScope` will
 take all the available space provided by the parent widget.

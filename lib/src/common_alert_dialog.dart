@@ -25,7 +25,7 @@ class CommonAlertDialogThemeData {
   final bool? showOkButton;
 
   @override
-  bool operator ==(Object? other) {
+  bool operator ==(Object other) {
     return other is CommonAlertDialogThemeData &&
         other.textStyle == textStyle &&
         other.shape == shape &&
