@@ -1,3 +1,6 @@
+## 1.1.1
+Fixed a bug in `CommonAsyncSnapshotResponses` to support void type.
+
 ## 1.1.0
 Added `autoClose` parameter in `FutureDialog`.
 Fixed a warning in `CommonAlertDialog`.

@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
+typedef VoidType = void;
+
 ///Common Wrapper for FutureBuilder and StreamBuilder, this provides auto error
 ///checking and loading sign etc.
 class CommonAsyncSnapshotResponses<T> extends StatelessWidget {
@@ -36,7 +38,7 @@ class CommonAsyncSnapshotResponses<T> extends StatelessWidget {
           (_) =>
               const Center(child: Text("Some Error occurred")))(snapshot.error);
     }
-    if (!snapshot.hasData) {
+    if (!snapshot.hasData && T != VoidType) {
       return const Center(child: Text("No Data Available"));
     }
     return onData == null ? Container() : onData!(snapshot.data as T);
