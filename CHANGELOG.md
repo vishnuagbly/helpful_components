@@ -1,3 +1,7 @@
+## 2.0.0
+[Breaking Change]: Renamed `showOkButton` to `showActionButton` in `CommonAlertDialog`.
+Added `actionButtonContent` parameter for `CommonAlertDialog`.
+
 ## 1.1.1
 Fixed a bug in `CommonAsyncSnapshotResponses` to support void type.
 

@@ -12,7 +12,8 @@ class CommonAlertDialogThemeData {
     this.successfulIconData,
     this.errorIconColor,
     this.errorIconData,
-    this.showOkButton,
+    this.showActionButton,
+    this.actionButtonContent,
   });
 
   final TextStyle? textStyle;
@@ -22,7 +23,8 @@ class CommonAlertDialogThemeData {
   final IconData? errorIconData;
   final Color? successfulIconColor;
   final Color? errorIconColor;
-  final bool? showOkButton;
+  final bool? showActionButton;
+  final Widget? actionButtonContent;
 
   @override
   bool operator ==(Object other) {
@@ -34,7 +36,7 @@ class CommonAlertDialogThemeData {
         other.successfulIconColor == successfulIconColor &&
         other.errorIconData == errorIconData &&
         other.errorIconColor == errorIconColor &&
-        other.showOkButton == showOkButton;
+        other.showActionButton == showActionButton;
   }
 
   @override
@@ -46,7 +48,7 @@ class CommonAlertDialogThemeData {
         successfulIconData,
         errorIconColor,
         errorIconData,
-        showOkButton,
+        showActionButton,
       );
 
   static const _kFallbackTheme = CommonAlertDialogThemeData();
@@ -118,9 +120,14 @@ class CommonAlertDialog extends StatelessWidget {
   final double? elevation;
 
   ///If it is null, it's default value will be
-  ///[CommonAlertDialogThemeData.showOkButton], if it is null, default value
+  ///[CommonAlertDialogThemeData.showActionButton], if it is null, default value
   ///will be true.
-  final bool? showOkButton;
+  final bool? showActionButton;
+
+  ///If it is null, it's default value will be
+  ///[CommonAlertDialogThemeData.actionButtonContent], if it is also null,
+  ///default value will be [CommonAlertDialog.getDefaultActionButtonContent].
+  final Widget? actionButtonContent;
 
   const CommonAlertDialog(
     this.titleString, {
@@ -132,8 +139,16 @@ class CommonAlertDialog extends StatelessWidget {
     this.shape,
     this.elevation,
     this.error = false,
-    this.showOkButton,
+    this.showActionButton,
+    this.actionButtonContent,
   }) : super(key: key);
+
+  static Widget getDefaultActionButtonContent(double screenWidth) => Text(
+        "OK",
+        style: TextStyle(
+          fontSize: screenWidth * 0.04,
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +183,8 @@ class CommonAlertDialog extends StatelessWidget {
 
     final icon = this.icon ?? Icon(defaultIconData, color: defaultIconColor);
 
-    final showOkButton = this.showOkButton ?? theme.showOkButton ?? true;
+    final showActionButton =
+        this.showActionButton ?? theme.showActionButton ?? true;
 
     return AlertDialog(
       elevation: elevation,
@@ -193,17 +209,13 @@ class CommonAlertDialog extends StatelessWidget {
         ],
       ),
       actions: <Widget>[
-        if (showOkButton)
+        if (showActionButton)
           Center(
             child: TextButton(
               onPressed: onPressed as void Function()? ??
                   () => Navigator.of(context).pop(),
-              child: Text(
-                "OK",
-                style: TextStyle(
-                  fontSize: screenWidth * 0.04,
-                ),
-              ),
+              child: actionButtonContent ??
+                  getDefaultActionButtonContent(screenWidth),
             ),
           ),
       ],
