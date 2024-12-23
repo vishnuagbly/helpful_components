@@ -1,3 +1,4 @@
+import 'package:example/hero_screen.dart';
 import 'package:example/pop_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:helpful_components/helpful_components.dart';
@@ -47,6 +48,16 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 child: const Text('Test Pop up'),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const HeroScreen()),
+                  );
+                },
+                child: const Text('Test SHero'),
               ),
             ],
           ),

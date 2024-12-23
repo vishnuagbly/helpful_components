@@ -12,3 +12,5 @@ export 'src/loading_dialog.dart';
 export 'src/loading_screen.dart';
 export 'src/positioned_align.dart';
 export 'src/row_info.dart';
+export 'src/s_hero/s_hero_scope.dart';
+export 'src/s_hero/s_hero.dart';
