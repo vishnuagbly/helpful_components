@@ -38,7 +38,7 @@ class _HeroScreenState extends State<HeroScreen> {
                 color: Colors.red,
                 child: Align(
                   alignment: flag ? Alignment.bottomCenter : Alignment.topLeft,
-                  child: SHero(useOverlay: false, tag: 'test_tag'),
+                  child: SHero(tag: 'test_tag'),
                 ),
               ),
             ],
