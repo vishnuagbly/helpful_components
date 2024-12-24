@@ -7,6 +7,7 @@ class SHeroScopeData {
     this.key, {
     bool value = false,
     Map<String, HeroData>? heroes,
+    this.useOverlay = false,
   })  : inAnimation = ValueNotifier<bool>(value),
         heroes = heroes ?? {} {
     debugPrint('scope data key: $key');
@@ -15,6 +16,7 @@ class SHeroScopeData {
   final GlobalKey<SHeroScopeState> key;
   final ValueNotifier<bool> inAnimation;
   final Map<String, HeroData> heroes;
+  final bool useOverlay;
 }
 
 class _InheritedSHeroScope extends InheritedWidget {
@@ -46,11 +48,13 @@ class SHeroScope extends StatefulWidget {
   const SHeroScope({
     required GlobalKey<SHeroScopeState> key,
     required this.child,
+    this.useOverlay = false,
     this.duration = const Duration(milliseconds: 100),
   }) : super(key: key);
 
   final Widget child;
   final Duration duration;
+  final bool useOverlay;
 
   @override
   State<SHeroScope> createState() => SHeroScopeState();
@@ -88,18 +92,15 @@ class SHeroScopeState extends State<SHeroScope> {
       data: data,
       child: AnimatedSwitcher(
         duration: widget.duration,
-        child: Container(
-          color: Colors.green[900],
-          child: Stack(
-            children: [
-              SizedBox(
-                height: double.infinity,
-                width: double.infinity,
-                child: widget.child,
-              ),
-              ...popups.values,
-            ],
-          ),
+        child: Stack(
+          children: [
+            SizedBox(
+              height: double.infinity,
+              width: double.infinity,
+              child: widget.child,
+            ),
+            ...popups.values,
+          ],
         ),
       ),
     );

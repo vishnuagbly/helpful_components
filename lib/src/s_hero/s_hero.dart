@@ -2,23 +2,21 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:helpful_components/helpful_components.dart';
+import 'package:helpful_components/src/animated_in_out.dart';
 
-import '../animated_in_out.dart';
 import 'hero_data.dart';
+import 's_hero_scope.dart';
 
 class SHero extends StatefulWidget {
   SHero({
     GlobalKey? key,
     this.child,
     String? tag,
-    this.useOverlay = false,
   })  : tag = tag ?? child.runtimeType.toString(),
         super(key: key ?? GlobalKey());
 
   final Widget? child;
   final String tag;
-  final bool useOverlay;
 
   @override
   State<SHero> createState() => _SHeroState();
@@ -40,7 +38,7 @@ class _SHeroState extends State<SHero> {
     height: 50,
   );
 
-  void startHeroAnimation(HeroData data) {
+  void startHeroAnimation(HeroData data, SHeroScopeData scopeData) {
     log('Started Animation: ${DateTime.now()}', name: 'SHero');
     final currentBox = renderBox;
     if (currentBox == null) {
@@ -57,6 +55,13 @@ class _SHeroState extends State<SHero> {
     }
 
     var current = currentBox.localToGlobal(Offset.zero);
+    final scopeKey = SHeroScope.of(context)!.key;
+    if (!scopeData.useOverlay) {
+      final scopeBox = scopeKey.currentContext?.findRenderObject() as RenderBox;
+      final scopeOffset = scopeBox.localToGlobal(Offset.zero);
+      current = current - scopeOffset;
+    }
+
     log('last pos: $last, current pos: $current', name: 'SHero');
 
     final difference = last - current;
@@ -73,13 +78,6 @@ class _SHeroState extends State<SHero> {
           child: child,
         );
 
-    final scopeKey = SHeroScope.of(context)!.key;
-    if (!widget.useOverlay) {
-      final scopeBox = scopeKey.currentContext?.findRenderObject() as RenderBox;
-      final scopeOffset = scopeBox.localToGlobal(Offset.zero);
-      current = current - scopeOffset;
-    }
-
     final child = Positioned(
       top: current.dy,
       left: current.dx,
@@ -90,7 +88,7 @@ class _SHeroState extends State<SHero> {
       ),
     );
 
-    if (widget.useOverlay) {
+    if (scopeData.useOverlay) {
       entry = OverlayEntry(
         builder: (context) => Stack(
           children: [
@@ -110,8 +108,8 @@ class _SHeroState extends State<SHero> {
     mainChild = widget.child ?? defaultChild;
     child = mainChild;
 
-    final scope = SHeroScope.of(context);
-    if (scope == null) {
+    final scopeData = SHeroScope.of(context);
+    if (scopeData == null) {
       throw PlatformException(
         code: 'S_HERO_SCOPE_NOT_FOUND',
         message: 'SHero tagged as ${widget.tag} could not find S_HERO_SCOPE.',
@@ -129,14 +127,14 @@ class _SHeroState extends State<SHero> {
 
     duration = animatedSwitcher.duration;
     final gKey = widget.key! as GlobalKey;
-    final heroData =
-        (scope.heroes[widget.tag]?..isFull = true) ?? HeroData(tag: widget.tag);
+    final heroData = (scopeData.heroes[widget.tag]?..isFull = true) ??
+        HeroData(tag: widget.tag);
     inAnimation = heroData.inAnimation;
     final isSecondSHero = heroData.isFull;
 
     log('SHero key: $gKey', name: 'SHero');
     log('name: ${widget.tag}', name: 'SHero');
-    log('heroData: ${scope.heroes[widget.tag]}', name: 'SHero');
+    log('heroData: ${scopeData.heroes[widget.tag]}', name: 'SHero');
 
     if (isSecondSHero) {
       if (heroData.size != null) {
@@ -148,7 +146,7 @@ class _SHeroState extends State<SHero> {
         );
       }
     } else {
-      scope.heroes[widget.tag] = heroData;
+      scopeData.heroes[widget.tag] = heroData;
     }
 
     if (!isSecondSHero) {
@@ -192,7 +190,7 @@ class _SHeroState extends State<SHero> {
       log('starting hero animation, key: $gKey', name: 'SHero');
       WidgetsBinding.instance.addPostFrameCallback((_) {
         inAnimation.value = true;
-        startHeroAnimation(heroData);
+        startHeroAnimation(heroData, scopeData);
         Future.delayed(duration).then((_) {
           inAnimation.value = false;
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -200,10 +198,10 @@ class _SHeroState extends State<SHero> {
               child = mainChild;
             });
             try {
-              if (widget.useOverlay) {
+              if (scopeData.useOverlay) {
                 entry?.remove();
               } else {
-                scope.key.currentState!.removePopup(widget.tag);
+                scopeData.key.currentState!.removePopup(widget.tag);
               }
             } catch (err) {
               log('Cannot remove entry, error: $err', name: 'SHero');
