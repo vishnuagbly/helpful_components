@@ -1,3 +1,7 @@
+## 2.1.0
+Added NEW component called [SHero] with [SHeroScope], to get hero animations
+under a same route or in the same screen.
+
 ## 2.0.0
 [Breaking Change]: Renamed `showOkButton` to `showActionButton` in `CommonAlertDialog`.
 Added `actionButtonContent` parameter for `CommonAlertDialog`.
