@@ -11,12 +11,14 @@ class SHero extends StatefulWidget {
   SHero({
     GlobalKey? key,
     this.child,
+    this.afterAnimation,
     String? tag,
   })  : tag = tag ?? child.runtimeType.toString(),
         super(key: key ?? GlobalKey());
 
   final Widget? child;
   final String tag;
+  final void Function(BuildContext)? afterAnimation;
 
   @override
   State<SHero> createState() => _SHeroState();
@@ -187,15 +189,22 @@ class _SHeroState extends State<SHero> {
     inAnimation.addListener(animationListener);
 
     if (isSecondSHero) {
-      log('starting hero animation, key: $gKey', name: 'SHero');
+      log('starting hero animation, tag: ${widget.tag}', name: 'SHero');
       WidgetsBinding.instance.addPostFrameCallback((_) {
         inAnimation.value = true;
         startHeroAnimation(heroData, scopeData);
         Future.delayed(duration).then((_) {
           inAnimation.value = false;
+          log('Animation Completed, tag: ${widget.tag}', name: 'SHero');
           WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted) return;
             setState(() {
               child = mainChild;
+              if (widget.afterAnimation != null) {
+                WidgetsBinding.instance.scheduleFrameCallback((_) {
+                  widget.afterAnimation?.call(context);
+                });
+              }
             });
             try {
               if (scopeData.useOverlay) {

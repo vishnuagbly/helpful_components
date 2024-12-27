@@ -1,3 +1,7 @@
+## 2.2.0
+Added `afterAnimation` parameter in [SHero].
+Added and fixed few logs in [SHero]
+
 ## 2.1.0
 Added NEW component called [SHero] with [SHeroScope], to get hero animations
 under a same route or in the same screen.
