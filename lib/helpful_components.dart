@@ -15,3 +15,4 @@ export 'src/row_info.dart';
 export 'src/s_hero/s_hero_scope.dart';
 export 'src/s_hero/s_hero.dart';
 export 'src/animated_in_out.dart';
+export 'src/animation_switch_controller.dart';

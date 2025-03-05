@@ -1,3 +1,6 @@
+## 2.2.1
+Now exporting`AnimationSwitchController` as well.
+
 ## 2.2.0
 Added `afterAnimation` parameter in [SHero].
 Added and fixed few logs in [SHero]
